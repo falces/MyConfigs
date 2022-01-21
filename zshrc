@@ -78,7 +78,15 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-plugins=(git virtualenv ssh-agent)
+plugins=(
+  git
+  virtualenv
+  ssh-agent
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+  docker
+  docker-compose
+)
 
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv)
 
@@ -121,13 +129,21 @@ POWERLEVEL9K_VIRTUALENV_BACKGROUND="clear"
 POWERLEVEL9K_VIRTUALENV_FOREGROUND="cyan"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(virtualenv pyenv time)
 POWERLEVEL9K_SHORTEN_STRATEGY=truncate_from_right
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
 # PowerLevel Customization
 
+# Antigen Plugin
+source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/antigen/antigen.zsh
+
+# Autosuggestions Plugin
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 export DEFAULT_USER="$(whoami)"
 
-alias ls="ls -la"
+# My Aliases
+alias ls="ls -la -G"
 alias phpunit="./vendor/phpunit/phpunit/phpunit --color"
 
 alias createnv="python3 -m virtualenv --python=/usr/local/bin/python3 .venv"
@@ -148,5 +164,3 @@ PATH=$(pyenv root)/shims:$PATH
 export PATH="/usr/local/opt/python@3.8/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
-
-alias phpunit="./vendor/phpunit/phpunit/phpunit --color"
