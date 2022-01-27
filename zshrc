@@ -164,3 +164,18 @@ PATH=$(pyenv root)/shims:$PATH
 export PATH="/usr/local/opt/python@3.8/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
+
+alias phpunit="./vendor/phpunit/phpunit/phpunit --color"
+
+alias prtemplate="mkdir .github; cp ~/Documents/GIT/plantilla_prs.md .github/pull_request_template.md"
+
+sym()
+{
+    if [ -f bin/console ]; then
+        php bin/console "$@"
+    elif [ -f app/console ]; then
+        php app/console "$@"
+    else
+        echo "No estás en un directorio Symfony"
+    fi
+}
