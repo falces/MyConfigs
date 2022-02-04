@@ -179,3 +179,42 @@ sym()
         echo "No estás en un directorio Symfony"
     fi
 }
+
+# SONARQUBE ================================
+
+export PATH="${HOME}/Applications/sonar-scanner/bin":$PATH
+
+SONARQUBE_PATH="${HOME}/Applications/sonarqube/bin/macosx-universal-64/sonar.sh"
+SONAR_SCANNER_PATH="${HOME}/Applications/sonar-scanner/bin/sonar-scanner"
+
+sonar_start() {
+  ${SONARQUBE_PATH} start
+}
+
+sonar_status() {
+  ${SONARQUBE_PATH} status
+}
+
+sonar_stop() {
+  ${SONARQUBE_PATH} stop
+}
+
+sonar_cli() {
+  ${SONARQUBE_PATH} console
+}
+
+sonar_scan() {
+  current_dir=$(basename $(pwd))
+  echo "current_dir=${current_dir}"
+
+  current_commit=$(git rev-parse --short HEAD)
+  echo "current_commit=${current_commit}"
+
+  ${SONAR_SCANNER_PATH} \
+  -Dsonar.projectKey=${current_dir} \
+  -Dsonar.projectName=${current_dir} \
+  -Dsonar.projectVersion=${current_commit} \
+  -Dsonar.source=. \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=$1
+}
