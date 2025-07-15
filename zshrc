@@ -15,7 +15,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel9k/powerlevel9k"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -80,12 +80,18 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 
 plugins=(
   git
-  virtualenv
-  ssh-agent
+  bundler
+  dotenv
+  macos
+  rake
+  rbenv
+  ruby
   zsh-syntax-highlighting
   zsh-autosuggestions
   docker
   docker-compose
+  ssh-agent
+  virtualenv
 )
 
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv)
@@ -138,7 +144,7 @@ POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
 source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/antigen/antigen.zsh
 
 # Autosuggestions Plugin
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 export DEFAULT_USER="$(whoami)"
 
@@ -153,6 +159,9 @@ alias deactivatenv="deactivate"
 alias cleanenv="pip freeze | xargs pip uninstall -y"
 alias pipset="pip freeze > requirements.txt"
 alias pinstall="pip install -r requirements.txt"
+alias du="docker compose -f docker/compose.yaml up --build -d"
+alias delcache="find . | grep -E \"(__pycache__|\.pyc|\.pyo$)\" | xargs rm -rf"
+alias nsh="docker run -it --rm --entrypoint sh node:24-alpine"
 
 # Pyenv
 if command -v pyenv 1>/dev/null 2>&1; then
@@ -165,8 +174,6 @@ export PATH="/usr/local/opt/python@3.8/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
 
-alias phpunit="./vendor/phpunit/phpunit/phpunit --color"
-
 alias prtemplate="mkdir .github; cp ~/Documents/GIT/plantilla_prs.md .github/pull_request_template.md"
 
 sym()
@@ -178,6 +185,19 @@ sym()
     else
         echo "No estás en un directorio Symfony"
     fi
+}
+
+his(){
+  history | grep $1
+}
+
+vinstall(){
+  pip install $1
+  pip freeze > requirements.txt
+}
+
+dsh(){
+  docker exec -it $1 /bin/sh
 }
 
 # SONARQUBE ================================
