@@ -200,6 +200,29 @@ dsh(){
   docker exec -it $1 /bin/sh
 }
 
+gitconfig(){
+  echo -n "Perfil GIT (per / pro):"
+  read  profile
+
+  # switch
+  case $profile in
+    per)
+      git config user.email "falces@gmail.com"
+      git config user.name "falces"
+      git config user.signingKey "WSLfalces"
+      ;;
+    pro)
+      git config user.email "javier.rodriguez@create-store.com"
+      git config user.name "javi-rodriguez-create"
+      git config user.signingKey "WSLcreate"
+      ;;
+    # default case: raise error
+    *)
+      >&2 echo "ERROR: perfil desconocido: $profile"
+      exit 1
+  esac
+}
+
 # SONARQUBE ================================
 
 export PATH="${HOME}/Applications/sonar-scanner/bin":$PATH
