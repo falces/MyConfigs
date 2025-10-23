@@ -149,9 +149,9 @@ ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestio
 export DEFAULT_USER="$(whoami)"
 
 # My Aliases
-alias ls="ls -la -G"
 alias phpunit="./vendor/phpunit/phpunit/phpunit --color"
-
+alias ll="ls -la -G"
+alias cls="clear"
 alias createnv="python3 -m virtualenv --python=/usr/local/bin/python3 .venv"
 alias activatenv="source .venv/bin/activate"
 alias deletenv="rm -rf .venv"
@@ -160,6 +160,8 @@ alias cleanenv="pip freeze | xargs pip uninstall -y"
 alias pipset="pip freeze > requirements.txt"
 alias pinstall="pip install -r requirements.txt"
 alias du="docker compose -f docker/compose.yaml up --build -d"
+alias dup="docker compose -f docker/compose.yaml -f docker/compose.production.yaml up -d"
+alias ddown="docker compose -f docker/compose.yaml down"
 alias delcache="find . | grep -E \"(__pycache__|\.pyc|\.pyo$)\" | xargs rm -rf"
 alias nsh="docker run -it --rm --entrypoint sh node:24-alpine"
 
@@ -261,3 +263,15 @@ sonar_scan() {
   -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.login=$1
 }
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p:10k.zsh ]] || source ~/.p10k.zsh
+
+source ~/.p10k.zsh
+
+export PATH="$PATH:/home/falces/.local/bin"
+export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
