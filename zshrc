@@ -148,10 +148,20 @@ ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions/zsh-autosuggestio
 
 export DEFAULT_USER="$(whoami)"
 
-# My Aliases
-alias phpunit="./vendor/phpunit/phpunit/phpunit --color"
+# System Aliases
 alias ll="ls -la -G"
 alias cls="clear"
+
+# PHP Aliases
+alias phpunit="./vendor/phpunit/phpunit/phpunit --color"
+
+# Docker Aliases
+alias du="docker compose -f docker/compose.yaml up --build -d"
+alias dup="docker compose -f docker/compose.yaml -f docker/compose.production.yaml up -d"
+alias ddown="docker compose -f docker/compose.yaml down"
+alias dps="docker ps --format \"table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}\""
+
+# Python Aliases
 alias createnv="python3 -m virtualenv --python=/usr/local/bin/python3 .venv"
 alias createnv314="virtualenv --python="/usr/local/bin/python3.14" .venv"
 alias activatenv="source .venv/bin/activate"
@@ -160,11 +170,7 @@ alias deactivatenv="deactivate"
 alias cleanenv="pip freeze | xargs pip uninstall -y"
 alias pipset="pip freeze > requirements.txt"
 alias pinstall="pip install -r requirements.txt"
-alias du="docker compose -f docker/compose.yaml up --build -d"
-alias dup="docker compose -f docker/compose.yaml -f docker/compose.production.yaml up -d"
-alias ddown="docker compose -f docker/compose.yaml down"
 alias delcache="find . | grep -E \"(__pycache__|\.pyc|\.pyo$)\" | xargs rm -rf"
-alias nsh="docker run -it --rm --entrypoint sh node:24-alpine"
 
 # Pyenv
 if command -v pyenv 1>/dev/null 2>&1; then
@@ -179,6 +185,7 @@ export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
 
 alias prtemplate="mkdir .github; cp ~/Documents/GIT/plantilla_prs.md .github/pull_request_template.md"
 
+# Symfony Functions
 sym()
 {
     if [ -f bin/console ]; then
@@ -190,17 +197,9 @@ sym()
     fi
 }
 
+# System Functions
 his(){
   history | grep $1
-}
-
-vinstall(){
-  pip install $1
-  pip freeze > requirements.txt
-}
-
-dsh(){
-  docker exec -it $1 /bin/sh
 }
 
 gitconfig(){
@@ -224,6 +223,25 @@ gitconfig(){
       >&2 echo "ERROR: perfil desconocido: $profile"
       exit 1
   esac
+}
+
+# Python Functions
+vinstall(){
+  pip install $1
+  pip freeze > requirements.txt
+}
+
+# Docker Functions
+dsh(){
+  docker exec -it $1 /bin/sh
+}
+
+dlog() {
+  if [ -z "$2" ]; then
+    docker logs -f "$1" 2>&1
+  else
+    docker logs -f "$1" 2>&1 | grep -i "$2"
+  fi
 }
 
 # SONARQUBE ================================
