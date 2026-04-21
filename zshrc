@@ -244,6 +244,13 @@ dlog() {
   fi
 }
 
+updateapt(){
+  sudo apt update
+  yes | sudo apt upgrade
+  yes | sudo apt autoremove
+  yes | sudo apt purge
+}
+
 # SONARQUBE ================================
 
 export PATH="${HOME}/Applications/sonar-scanner/bin":$PATH
