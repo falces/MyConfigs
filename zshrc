@@ -156,8 +156,7 @@ alias cls="clear"
 alias phpunit="./vendor/phpunit/phpunit/phpunit --color"
 
 # Docker Aliases
-alias du="docker compose -f docker/compose.yaml up --build -d"
-alias dup="docker compose -f docker/compose.yaml -f docker/compose.production.yaml up -d"
+alias dup="docker compose -f docker/compose.yaml up --build -d"
 alias ddown="docker compose -f docker/compose.yaml down"
 alias dps="docker ps --format \"table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}\""
 
@@ -203,6 +202,26 @@ his(){
 }
 
 gitconfig(){
+  REPO_DIR="${2:-.}"
+  
+  # Verificar que estamos en un repositorio git
+  if [ ! -d "$REPO_DIR/.git" ]; then
+      echo "Error: $REPO_DIR no es un repositorio git"
+      exit 1
+  fi
+
+  CURRENT_URL=$(git -C "$REPO_DIR" config --get remote.origin.url)
+
+  if [ -z "$CURRENT_URL" ]; then
+    echo "Error: No existe un remoto 'origin' configurado"
+    exit 1
+  fi
+
+  if [[ ! "$CURRENT_URL" =~ github\.com ]]; then
+    echo "Error: El remoto origin no es de GitHub"
+    exit 1
+  fi
+  
   echo -n "Perfil GIT (per / pro):"
   read  profile
 
@@ -212,17 +231,29 @@ gitconfig(){
       git config user.email "falces@gmail.com"
       git config user.name "falces"
       git config user.signingKey "WSLfalces"
+      NEW_URL="${CURRENT_URL//git@github.com:/git@github.com-falces:}"
+
+      if [ "$CURRENT_URL" = "$NEW_URL" ]; then
+        echo "Error: La URL no contiene 'git@github.com:' o no pudo procesarse"
+        exit 1
+      fi
+
       ;;
     pro)
       git config user.email "javier.rodriguez@create-store.com"
       git config user.name "javi-rodriguez-create"
       git config user.signingKey "WSLcreate"
+      NEW_URL="${CURRENT_URL//git@github.com-falces:/git@github.com:}"
       ;;
     # default case: raise error
     *)
       >&2 echo "ERROR: perfil desconocido: $profile"
       exit 1
   esac
+  git -C "$REPO_DIR" remote set-url origin "$NEW_URL"
+  echo "✓ Remoto actualizado"
+  echo "  Anterior: $CURRENT_URL"
+  echo "  Nuevo:    $NEW_URL"
 }
 
 # Python Functions
